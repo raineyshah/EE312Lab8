@@ -1,52 +1,22 @@
-#include <iostream>
-#include <HashTable.h>
+#include <sys/types.h>
+#include <dirent.h>
+#include <errno.h>
 #include <vector>
 #include <string>
-#include <dirent.h>
-#include <sys/types.h>
-#include <queue>
+#include <iostream>
+#include "HashTable.h"
 
 using namespace std;
 
-//reads and stores file names from a directory
-//code used from EE312 website
-int getdir(string dir, vector<string> &files)
+int main()
 {
-    DIR *dp;
-    struct dirent *dirp;
-
-    //opens directory
-    if((dp  = opendir(dir.c_str())) == NULL) {
-        cout << "Error(" << 1 << ") opening " << dir << endl;
-        return 1;
-    }
-    //read each file from the directory
-    while ((dirp = readdir(dp)) != NULL) {
-        files.push_back(string(dirp->d_name));
-    }
-    //close directory
-    closedir(dp);
-    return 0;
-}
-
-
-
-int main() {
-
     string dir = string("sm_doc_set");
-    vector<string> files;         //holds name of files within a directory
+    vector<string> files = vector<string>();
 
-    int testCode;
-    testCode = getdir(dir, files);
-    if(testCode ==1) {
-        std::cout << "File did not open." << std::endl;
+    getdir(dir,files);
+
+    for (unsigned int i = 0;i < files.size();i++) {
+        cout << i << " " << files[i] << endl;
     }
-
-
-
     return 0;
 }
-
-
-
-

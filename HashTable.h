@@ -5,9 +5,18 @@
 #ifndef CHEATERSLAB_HASHTABLE_H
 #define CHEATERSLAB_HASHTABLE_H
 
+#include <sys/types.h>
+#include <dirent.h>
+#include <errno.h>
+#include <vector>
+#include <string>
+#include <iostream>
+
+using namespace std;
+
 class HashTable{
 public:
-    void getChunks()
+    void getChunks();
 
 private:
 
@@ -33,6 +42,7 @@ int getdir(string dir, vector<string> &files)
     }
     //read each file from the directory
     while ((dirp = readdir(dp)) != NULL) {
+        if(string(dirp->d_name) != "." && string(dirp->d_name) != "..")
         files.push_back(string(dirp->d_name));
     }
     //close directory
