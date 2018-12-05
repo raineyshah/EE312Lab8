@@ -13,7 +13,7 @@
 #include <iostream>
 #include <cmath>
 
-const int prime = 23;
+const int prime = 31;
 
 using namespace std;
 
