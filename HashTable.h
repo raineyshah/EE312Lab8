@@ -11,20 +11,43 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <cmath>
+
+const int prime = 23;
 
 using namespace std;
 
-class HashTable{
-public:
-    void getChunks();
-
-private:
-
-
+struct keyNode{
+    int fileIndex;
+    keyNode* next;
 };
 
+int hashFunction(const string &cleanChunk, int hashTableSize);
+string cleanTheChunk(const string &uncleanChunk);
 
 
+int hashFunction(const string &cleanChunk, int hashTableSize){
+    double value = 0;
+    int hashIndex = 0;
+    for(int i = 0; i < sizeof(cleanChunk); i++){
+        value += (cleanChunk[i]*pow(23, i));
+    }
+    hashIndex = fmod(value, hashTableSize);
+
+    return hashIndex;
+}
+
+string cleanTheChunk(const string &uncleanChunk){
+    string cleanChunk = "";
+    for(int i = 0; i < uncleanChunk.size(); i++){
+        if(uncleanChunk[i] >= 65 && uncleanChunk[i] <= 90) {
+            cleanChunk += uncleanChunk[i] + 32;
+        } else if((uncleanChunk[i] >= 48 && uncleanChunk[i] <= 57) || (uncleanChunk[i] >= 97 && uncleanChunk[i] <= 122)){
+            cleanChunk += uncleanChunk[i];
+        }
+    }
+    return cleanChunk;
+}
 
 
 
