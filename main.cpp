@@ -7,6 +7,8 @@
 #include <iostream>
 #include <queue>
 #include "HashTable.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 using namespace std;
 const int largePrimeSize = 400009;
@@ -14,9 +16,7 @@ const int largePrimeSize = 400009;
 
 int main(int argc, char *argv[])
 {
-//***NOTES to make it work on LINUX are by  lines that need changing
-
-    string dir = string("sm_doc_set");     // string dir = argv[1]
+    string dir = argv[1];
     vector<string> files = vector<string>();
     getdir(dir,files);
 
@@ -26,8 +26,9 @@ int main(int argc, char *argv[])
     }
 
     vector<string> chunkIn;
-    int threshold = 200;     //int chunkSize = atoi(argv[2]);
-    int chunkSize = 8;      //int chunkSize = atoi(argv[2]);
+    int chunkSize = atoi(argv[2]);
+    int threshold = atoi(argv[3]);
+
     keyNode* hashTable [largePrimeSize];
     int hashIndex = 0;
     int numFiles = files.size();
@@ -44,17 +45,23 @@ int main(int argc, char *argv[])
         hashTable[z] = NULL;
     }
 
+	
 //Populate Hash Table
+	vector<string> words;
     for (int i = 0; i < files.size(); i++) {
-        string fileName = "sm_doc_set/" + files[i]; //string fileName = argv[1] + "/" + files[i];
-        ifstream fin(fileName);
+        string fileName = dir +  files[i];
+        ifstream fin(fileName.c_str());
 
         string word;
         string uncleanChunk;
         string cleanChunk;
-        vector<string> words;
+	words.clear();
 
-        //read all words from a file into a vector (implementation requires more memory)
+        //Reads words from file into a vector. This implementation requires more memory than queue version, but the only limit on memory is the size of the largest file
+        //because the vector clears after each iteration. 
+        //The max amount of memory used is n spaces for the largest file in the directory with n words
+	//We chose this method because of the much simpler code, and the inconsequential potential downside of memory shortage that would only occur if a file had millions of words
+	
         while (fin >> word) {
             words.push_back(word);
         }
@@ -80,36 +87,6 @@ int main(int argc, char *argv[])
         }
     }
 
-/***            QUEUE IMPLEMENTATION OF GETTING CHUNKS WITH SOME UNIDENTIFIABLE BUG IN IT
-        while(fin >> word) {
-        //Populate one chunk and store in Hash Table at a time to preserve memory
-            while (chunkIn.size() != chunkSize) {
-                chunkIn.push_back(word);
-                if(fin >> word);
-            }
-            uncleanChunk = "";
-            for(int x = 0; x < chunkSize; x++) {
-                uncleanChunk += chunkIn[x];
-            }
-            cleanChunk = cleanTheChunk(uncleanChunk);
-            hashIndex = hashFunction(cleanChunk, largePrimeSize);
-
-            if(hashTable[hashIndex] == NULL) {
-                hashTable[hashIndex] = new keyNode;
-                hashTable[hashIndex]->fileIndex = i;
-                hashTable[hashIndex]->next = NULL;
-            }
-            else if(hashTable[hashIndex]->fileIndex != i){
-                    keyNode *temp = new keyNode;
-                    temp->fileIndex = i;
-                    temp->next = hashTable[hashIndex];
-                    hashTable[hashIndex] = temp;
-            }
-            chunkIn.erase(chunkIn.begin());
-        }
-        fin.close();
-    }
-***/
 
 //Traverse Hash Table and note collisions by incrementing respective (x,y) coords in 2D array of file indexes
     for(int i = 0; i < largePrimeSize; i++){
