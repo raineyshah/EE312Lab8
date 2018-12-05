@@ -22,6 +22,12 @@ struct keyNode{
     keyNode* next;
 };
 
+struct Cheaters{
+    int collisions;
+    int cheater1;
+    int cheater2;
+};
+
 int hashFunction(const string &cleanChunk, int hashTableSize);
 string cleanTheChunk(const string &uncleanChunk);
 
@@ -33,7 +39,10 @@ int hashFunction(const string &cleanChunk, int hashTableSize){
         value += (cleanChunk[i]*pow(23, i));
     }
     hashIndex = fmod(value, hashTableSize);
-
+    //always return positive value index
+    if(hashIndex < 0){
+        hashIndex = (-1*hashIndex);
+    }
     return hashIndex;
 }
 
